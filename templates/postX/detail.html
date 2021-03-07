@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+ 
+{% block title %}{{ post.user }}:post{% endblock %}
+{% block left_side_content %}
+	{% include "account/left_side.html" %}
+{% endblock %}
+{% block right_side_content %}
+	{% include "account/right_side.html" %}
+{% endblock %}
+{% block content %}
+	<div class="col-5 ">
+		
+		<div class="d-flex" >
+			<div class="col-12">
+				<div class="card ">
+					<div class="card-header d-flex justify-sb">
+						<div class="user">
+							{% load thumbnail %}
+							<img class="pro-pic " src="{% thumbnail post.user.profile.photo 100x100 %}">
+							<div class="m-t-1 p-l-1">{{ post.user }}</div>
+						</div>
+						{% if request.user == post.user %}
+							<div class="edit float-r">
+								<i class="fa fa-edit"></i>
+							</div>
+							
+
+						{% endif %}
+					</div>
+					<div class="card-img w-100">
+						<img class="w-100" src="{% thumbnail post.post_img 1000x1000 %}">
+					</div>
+					<div class="date align-c">{{ post.updated }} </div>
+					<p class="card-txt">
+						{{ post.post_txt }}
+					
+							
+					</p>
+					<div class="tools d-flex justify-sa">
+						{% csrf_token %}
+						{% with total_likes=post.users_like.count users_like=post.users_like.all %}
+							<a href="#" class="like" data-id="{{ post.id }}" data-action="{% if request.user in users_like %}un{% endif %}like"> 
+								
+								{% if request.user not in users_like %}
+									<span class="count">
+										<i class="icn far fa-heart "></i>
+										<span class="total c-brand " data-id="{{ post.id }}">{{ total_likes }}</span>
+									
+									</span> 
+								{% else %}
+									<span class="count">
+										<i class="icn fas fa-heart c-r"></i>
+										<span class="total c-brand " data-id="{{ post.id }}">{{ total_likes }}</span>
+									
+									</span> 
+									
+								{% endif %}
+								
+								
+							</a>
+						{% endwith %}
+						{% with post.comments.count as total_comments %}
+							<a  href="{{ post.get_absolute_url }}">
+								<i class="fa fa-comment-alt"></i>
+								<span class="link">{{ total_comments }}</span> 
+								
+							</a>
+						{% endwith %}
+						<a href="#">
+							<i class="fa fa-share"></i>
+							
+						</a>
+						
+					</div>	
+				</div>
+			</div>	
+		</div>
+		<div class="d-flex" >
+			<div class="comments col-12  ">
+				{% if post.users_like.all %}
+					<span class="c-b date">People likes this..</span><br>
+				{% endif %}
+				<div class="comments user_likes col-10 d-flex">
+					{% for users_like in post.users_like.all %}
+						<a href="{{ users_like.user.url }}" class="link">
+
+							<div class="user">
+								{% load thumbnail %}
+								<img class="pro-pic" src="{% thumbnail users_like.profile.photo 100x100 %}">
+								<div class="m-t-1 m-l-1"> </div>
+							</div>
+							
+						</a>
+						<div class="d-flex justify-sb">
+						
+							<span class="date c-gr">{{ users_like.created }}</span>
+							
+						</div>
+						
+					{% empty %}
+						<span class="c-b date">No one like this content yet, das ist keine große Sache</span>
+					{% endfor %}
+					
+				</div>
+				{% with comments.count as total_comments %}
+					<span class="comments-count">
+						<em class="date c-bl">{{ total_comments }} comment{{ total_comments|pluralize }}</em> 
+					</span>
+				{% endwith %}
+				<br>
+				
+				{% for comment in comments %}
+					<a href="{{ comment.user.url }}" class="link">
+
+						<div class="user">
+							{% load thumbnail %}
+							<img class="pro-pic" src="{% thumbnail comment.user.profile.photo 100x100 %}">
+							<div class="m-t-1 m-l-1">{{comment.user}} </div>
+						</div>
+						
+					</a>
+					<div class="d-flex justify-sb">
+						<span class="p-l-2 wrap">{{ comment.cmnt }}</span>
+						<span class="date c-gr">{{ comment.created }}</span>
+						
+					</div>
+					
+				{% empty %}
+					<p>There is no comments yet </p>
+				{% endfor %}
+			</div>
+
+		</div>
+	
+	</div>
+	<div class="cmnt-section w-100-m d-flex justify-sa">
+		<div class="col-4 large">
+			
+		</div>
+		<div class="col-3 ">
+			<div class="card p-1">
+				{% if request.user %}
+					<div class="user">
+						{% load thumbnail %}
+						<img class="pro-pic" src="{% thumbnail request.user.profile.photo 100x100 %}">
+						<div class="m-t-1 m-l-1">{{ request.user }} </div>
+					</div>
+					<form class="form d-flex" method="POST" action="{{ post.get_absolute_url }}">
+						{% for i in form %}
+							<div class="input-2">
+								{{ i }}
+								
+							</div>
+						{% endfor %}
+						{% csrf_token %}
+						<button type="submit" class="btn-b float-r"> Send </button>
+						
+					</form>
+				{% endif %}
+
+			</div>
+			
+		</div>
+		<div class="col-4 large">
+			
+		</div>	
+		
+	</div>
+
+{% endblock %}
+		
+{% block domready %}
+	$('a.like').click(function(e){
+		e.preventDefault();
+		$.post('{% url "like" %}', 
+		{
+			id: $(this).data('id'), 
+			action: $(this).data('action'),
+			'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+		},
+		
+		function(data){
+			if (data['status'] == 'ok'){
+				var previous_action = $('a.like').data('action');
+				// toggle data-action
+				$('a.like').data('action', previous_action == 'like' ? 'unlike' : 'like');
+				// toggle link text
+				$('a.like span.count i.icn').attr('class', previous_action == 'like' ? 'fa fa-heart c-r' : 'far fa-heart c-r');
+				// update total likes
+				var previous_likes = parseInt($('span.count .total').text());
+				$('span.count .total').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+				console.log(previous_likes)
+				console.log(previous_action)
+				
+			}
+		}
+		);
+	}); 
+{% endblock %}
+
+
+
+
+<!-- comment>
+	<div class="card ">
+		<div class="card-header d-flex justify-sb">
+			<div class="user">
+				{% load thumbnail %}
+				<img class="pro-pic " src="{% thumbnail object.user.profile.photo 100x100 %}">
+				<div class="m-t-1 p-l-1">{{ object.user }}{{ post.user }}</div>
+			</div>
+
+			<div class="edit float-r">
+				<i class="fa fa-edit"></i>
+			</div>
+		</div>
+		<div class="card-img w-100">
+			<img class="w-100" src="{% thumbnail object.post_img 1000x1000 %}">
+		</div>
+		<div class="date align-c">{{ object.updated }} </div>
+		<p class="card-txt">
+			{{ object.post_txt }}
+		
+				
+		</p>
+		<div class="tools d-flex justify-sa">
+			<a href="#">
+				<i class="fa fa-heart"> 207</i>
+				
+			</a>
+			<a href="#">
+				<i class="fa fa-comment-alt"></i>
+				
+			</a>
+			<a href="#">
+				<i class="fa fa-share"></i>
+				
+			</a>
+			
+		</div>	
+	</div>
+<comment -->

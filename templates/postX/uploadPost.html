@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}upload_post{% endblock %}
+{% block content %}
+	<div class="m-t-4">
+		<div class="col-8">
+			<div class="card">
+				<div class="form">
+					<form enctype="multipart/form-data" method="POST" >
+						{% for i in post_form %}
+							<label>{{ i.label }}</label>
+							<div class="input-2 w-100">
+								{{ i }}
+							</div>
+						{% endfor %}
+						{% csrf_token %}
+						<button class="btn-l-b" type="submit">Send</button>
+					</form>
+				</div>
+			</div>
+			
+		</div>
+		
+	</div>
+
+{% endblock %}

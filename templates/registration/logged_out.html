@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Logged out{% endblock %}
+{% block form_content %}
+	<div class="card col-6">
+		<div class="form">
+			<h1 class="form-header">Logged out</h1>
+			<p>
+				You have been successfully logged out.
+				You can <a class="linls" href="{% url 'login' %}" >log-in </a> again.
+			</p>
+		</div>
+		
+	</div>
+		
+{% endblock %}
+
+#logged_out

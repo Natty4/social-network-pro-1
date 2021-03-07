@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% endblock %}
+{% block content %}
+<div class="col-6">
+	{% if query %}
+		<div class="d-flex" >
+
+			<div class="col-12">
+				<div class="card">
+					<h5 class="card-header p-1">Posts containing "{{ query }}"</h3>
+					<h6 class="card-txt p-1">
+						{% with results.count as total_results %}
+							Found {{ total_results }} result{{ total_results|pluralize }}
+						{% endwith %}
+					</h4>
+					
+				</div>
+				
+			</div>
+		</div>
+		<div class="d-flex" >
+
+			
+			<div class="col-12">
+				{% for post in results %}
+					<div class="card ">
+						<div class="card-header d-flex justify-sb p-1">
+							<a href="{{ post.user.get_absolute_url }}">
+								<div class="user">
+									{% load thumbnail %}
+
+									<img class="pro-pic m-b-1 " src="{% thumbnail post.user.profile.photo 100x100 %}">
+									<div class="m-t-1 p-l-1"> {{ post.user }} </div>
+								</div>
+								
+							</a>
+
+							{% if request.user == post.user %}
+								<div class="edit float-r">
+									<i class="fa fa-edit"></i>
+								</div>
+								
+							{% endif %}
+						</div>
+						<a href="{{ post.get_absolute_url }}">
+							<div class="card-img w-100">
+								<img class="w-100" src="{{ post.post_img.url }}">
+							</div>
+							
+							<div class="date align-c">{{ post.updated }} </div>
+							<p class="card-txt">
+								{{ post.post_txt|truncatewords:31 }}
+								  	
+							</p>
+						</a>
+						<div class="tools d-flex justify-sa">
+							{% with total_likes=post.users_like.count users_like=post.users_like.all %}
+								<a href="#" class="like" data-id="{{ post.id }}" data-action="{% if request.user in users_like %}un{% endif %}like"> 
+									
+									{% if request.user not in users_like %}
+										<span class="count">
+											<i class="icn far fa-heart "></i>
+											<span class="total c-brand ">{{ total_likes }}</span>
+										
+										</span> 
+									{% else %}
+										<span class="count">
+											<i class="icn fas fa-heart c-r"></i>
+											<span class="total c-brand ">{{ total_likes }}</span>
+										
+										</span> 
+										
+									{% endif %}
+									
+									
+								</a>
+							{% endwith %}
+							{% with post.comments.count as total_comments %}
+								<a  href="{{ post.get_absolute_url }}">
+									<i class="fa fa-comment-alt"></i>
+									<span class="link">{{ total_comments }}</span> 
+									
+								</a>
+							{% endwith %}
+							<a href="#">
+								<i class="fa fa-share"></i>
+								
+							</a>
+							
+						</div>	
+					</div>
+				{% empty %}
+					<p class="card-txt ">There are no results for your query.</p>
+				{% endfor %}
+					<a href="{% url 'post_search' %}"><button class="btn-l-d bg-brand w-100 m-t-1 pointer">Search again</button></a>
+			</div>	
+		</div>
+	{% else %}
+		<div class="card col-12">
+			<h1 class="card-header align-c">Search for posts</h1>
+			<form method="get">
+				<div class="align-c w-100">
+				
+					{% for field in form %}
+						<div class="input-2 d-flex ">
+							{{ field }}
+							<button class="btn-l-b pointer" type="submit"> <i class="fa fa-search "></i></button>
+						</div>
+					{% endfor %}
+				</div>
+			</form>
+			
+		</div>
+	{% endif %}
+	
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,258 @@
+{% load static %}
+{% load social_share %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="icon" href="{% static 'images/NK.png' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'fontawesome-free-5.15.1-web/css/all.css' %}">
+
+	
+</head>
+<body>
+	<nav class="navbar" id="Navbar">
+		<a href="{% url 'posts' %}" class="active">
+			<i class="fa fa-hand-holding-heart fa-3x "></i>Ykt
+		</a>
+		<a href="{% url 'posts' %}">Post <i class="fas fa-laptop"></i></a>
+		<a href="#">Notic <i class="fa fa-bell"></i></a>
+		<a href="{% url 'about:about'%}">About <i class="fa fa-list"></i></a>
+		<a href="{% url 'post_search' %}"> Search <i class="fa fa-search "></i></a>
+
+		<a href="javascript:void(0);" class="icon" onclick="navbarToggler()">
+			<i class="fa fa-bars"></i>
+		</a>
+		
+
+
+		{% if request.user.is_authenticated %}
+			<span class="float-r" >
+				<a class="user" href="{% url 'dashboard' %}">
+					{{ request.user }}
+					
+				</a>
+				<a class="" name="logout" href="{% url 'logout' %}">
+					<i class="fa fa-sign-out-alt"></i>
+				</a>
+			</span>
+				
+			 
+		{% else %}
+			<a href="#signModal" class="login">
+				<a href="{% url 'login' %}">login</a> 
+				<i class="fa fa-user"></i>
+			</a>
+		{% endif %}
+		
+
+	</nav>
+	
+	<div class="contianer ">
+		<div class="main">
+			<div class="row d-flex-w ">
+ 				<div class="col-2 large">
+ 					
+ 				</div>
+				<div class="col-8 d-flex justify-sa">
+					<div class="col-3 large">
+						{% block left_side_content %}
+					
+						{% endblock %}
+					</div>
+					
+					{% block content %}
+						
+					{% endblock %}
+					{% block form_content %}
+						
+					{% endblock %}
+					
+					<div class="col-3 large">
+						{% block right_side_content %}
+						{% endblock %}
+						
+					</div>
+				</div>
+				<div class="col-2 large">
+ 					
+ 				</div>
+				
+			</div>
+			<div class="addBtn">
+				<a href="#postModal">+</a -->
+				<a href="{% url 'upload' %}">+</a>
+			</div>
+		</div>
+	</div>
+		{% block jambotrons %}
+		{% endblock %}
+	<footer class="footer m-b-3">
+		<div class="footer-content d-flex-w justify-sa">
+			<div>
+				<a href="{% url 'about:about'%}" class="p-l-1"> about </a>
+				<a href="{% url 'posts' %}"> post </a>
+				<a href="{% url 'post_search' %}"> search </a>
+				<a href="{% url 'about:about'%}" class="p-l-1"> blog </a>
+				
+				
+			</div>
+		</div>
+		<div class="copyright align-c">
+			 © <script>document.write(new Date().getFullYear());</script> All rights reserved 
+		</div>
+	</footer>
+
+	<div id="postModal" class="postModalWindow">
+		<div class="card">
+			<a href="" class="float-l"><i class="fa fa-backspace"></i></a>
+			<form class="form">
+				<p></p>
+				<textarea placeholder="txt..."></textarea><br>
+				
+				<input type="text" name="tags" placeholder="#tags"><br>
+				
+				<input type="file" name="pic" class="btn-"><br>
+				<p></p>
+				<button class="btn-l-b"> Send </button>
+			</form>
+		</div>
+	</div>
+	<div id="shareModal" class="modalWindow">
+		<div class="card c-brand-1">
+			<a href="" class="float-l">
+				<i class="fa fa-backspace"></i>
+			</a>
+			<br>
+			<div  class="c-brand-1">
+	
+
+				<div class="d-flex  p-1 c-b">
+					<i class="fab p-r-1 fa-facebook fa-2x"></i>
+					<span class="so-share">
+						{% post_to_facebook post.get_absolut_url  %}
+					</span>
+
+				</div>
+				<div class="d-flex  p-1 c-b">
+					<i class="fab p-r-1 fa-twitter fa-2x"></i>
+					<span class="so-share">
+						{% post_to_twitter post.get_absolut_url  %}
+					</span>
+		
+				</div>
+				<div class="d-flex  p-1 c-g">
+					<i class="fab p-r-1 fa-telegram fa-2x"></i>
+					<span class="so-share">
+						{% post_to_telegram post.get_absolut_url  %}
+						
+					</span>
+
+				</div>
+				<div class="d-flex  p-1 c-b">
+					<i class="fab p-r-1 fa-linkedin fa-2x"></i>
+					<span class="so-share">
+						{% post_to_linkedin post.get_absolut_url  %}
+						
+					</span>
+
+				</div>
+				<div class="d-flex  p-1 c-g">
+					<i class="fab p-r-1 fa-whatsapp fa-2x"></i>
+					<span class="so-share">
+						{% post_to_whatsapp post.get_absolut_url  %}
+						
+					</span>
+
+				</div>
+				<div class="d-flex  p-1 c-r">
+					<i class="fab p-r-1 fa-pinterest fa-2x"></i>
+					<span class="so-share">
+						{% save_to_pinterest post.get_absolut_url  %}
+						
+					</span>
+
+				</div>
+				
+			</div>
+						
+							
+		</div>
+	</div>
+
+	<div id="signModal" class="signModalWindow">
+		<div class="card">
+			<a href="#" class="float-l"><i class="fa fa-backspace"></a>
+			<form class="form" action="temp.html">
+				<p></p>
+				<input type="text" name="user-name" placeholder="username"><br>
+				<input type="text" name="full-name" placeholder="fullname"><br>
+				
+				<input type="email" name="tags" placeholder="exampl@x.com"><br>
+				
+				<input type="password" name="pass" placeholder="password"><br>
+				<p></p>
+				<button class="btn-l-b"> Signup </button>
+			</form>
+		</div>
+	</div>
+	<script src="{% static 'jquery-3.5.1/jquery-3.5.1.js' %}"></script>
+	<script>
+
+		
+
+		$(document).ready(function()
+		{
+			{% block domready %}
+			{% endblock %}
+		});
+	</script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	{% add_pinterest_script %}
+</body>
+</html>
+
+
+
+<!--div class="card col-12">
+						<div class="card-header d-flex justify-sb">
+							<div class="user">
+								<img class="pro-pic " src="img/p.png">
+								<div class="mt">user-name </div>
+							</div>
+
+							<div class="edit float-r">
+								<i class="fa fa-edit"></i>
+							</div>
+						</div>
+						<div class="card-img w-100">
+							<img class="w-100" src="img/g1286122912.jpg.jpg">
+						</div>
+						<div class="date align-c">2021/12/12 02:17 am.</div>
+						<p class="card-txt">
+						  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+						  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+						  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+						  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+						  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	
+						</p>
+						<div class="tools d-flex justify-sa">
+							<a href="#">
+								<i class="fa fa-heart"> 207</i>
+								
+							</a>
+							<a href="#">
+								<i class="fa fa-comment-alt"></i>
+								
+							</a>
+							<a href="#">
+								<i class="fa fa-share"></i>
+								
+							</a>
+							
+						</div>	
+					</div -->

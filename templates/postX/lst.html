@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Posts{% endblock %}
+
+{% block left_side_content %}
+	{% include "account/left_side.html" %}
+{% endblock %}
+{% block right_side_content %}
+	{% include "account/right_side.html" %}
+{% endblock %}
+{% block content %}
+	
+	<div class="col-5 " id="post_list">
+
+		{% include "postX/list.html" %}
+	
+	</div>
+
+		
+	
+{% endblock %}
+
+{% block domready %}
+
+ 
+
+	var page = 1;
+	var empty_page = false;
+	var block_request = false;
+	$(window).scroll(function() {
+		var margin = $(document).height() - $(window).height() - 200;
+		if($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+			block_request = true;
+			page += 1;
+			$.get('?page=' + page, function(data) {
+				if(data == '') {
+					empty_page = true;
+				}
+				else {
+					block_request = false;
+					$('#post_list').append(data);
+				}
+			});
+		}
+	});
+
+{% endblock %}

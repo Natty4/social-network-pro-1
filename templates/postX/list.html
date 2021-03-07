@@ -1,0 +1,131 @@
+{% for post in posts %} 
+	<div class="card ">
+		<div class="card-header d-flex justify-sb p-1">
+			<a href="{{ post.user.get_absolute_url }}">
+				<div class="user">
+					{% load thumbnail %}
+
+					<img class="pro-pic m-b-1 " src="{% thumbnail post.user.profile.photo 100x100 %}">
+					<div class="m-t-1 p-l-1"> {{ post.user }} </div>
+				</div>
+				
+			</a>
+
+			{% if request.user == post.user %}
+				<div class="edit float-r">
+					<i class="fa fa-edit c-default"></i>
+				</div>
+				<div class="edit float-r">
+					<a href="{% url 'post_delete' post.id %}"><i class="fa fa-delete">...</i></a>
+				</div>
+				
+			{% endif %}
+		</div>
+		<a href="{{ post.get_absolute_url }}">
+			<div class="card-img w-100">
+				<img class="w-100" src="{{ post.post_img.url }}">
+			</div>
+			
+			<div class="date align-c">{{ post.updated }} </div>
+			<p class="card-txt">
+				{{ post.post_txt|truncatewords:31 }}
+				  	
+			</p>
+		</a>
+		<div class="tools d-flex justify-sa">
+			{% csrf_token %}
+			{% with total_likes=post.users_like.count users_like=post.users_like.all %}
+				<a href="#" class="like" data-id="{{ post.id }}" data-action="{% if request.user in users_like %}un{% endif %}like"> 
+					
+					{% if request.user not in users_like %}
+						<span class="count">
+							<i class="icn far fa-heart "></i>
+							<span class="total c-brand ">{{ total_likes }}</span>
+						
+						</span> 
+					{% else %}
+						<span class="count">
+							<i class="icn fas fa-heart c-r"></i>
+							<span class="total c-brand ">{{ total_likes }}</span>
+						
+						</span> 
+						
+					{% endif %}
+					
+					
+				</a>
+			{% endwith %}
+			{% with post.comments.count as total_comments %}
+				<a  href="{{ post.get_absolute_url }}">
+					<i class="fa fa-comment-alt"></i>
+					<span class="link">{{ total_comments }}</span> 
+					
+				</a>
+			{% endwith %}
+				
+				<a href="#shareModal">
+					<i class="fa fa-share " id="so-share">
+					
+					</i>
+
+				</a>
+	
+			
+		</div>
+	</div>
+{% endfor %}
+
+
+		
+
+
+
+
+
+
+
+
+	<!-- comment>
+		{% for object in object_list %} 
+			<div class="card ">
+				<div class="card-header d-flex justify-sb">
+					<div class="user">
+						{% load thumbnail %}
+
+						<img class="pro-pic m-b-1 " src="{% thumbnail object.user.profile.photo 100x100 crop %}">
+						<div class="m-t-1 p-l-1">{{ object.user }} {{ object.pk }}</div>
+					</div>
+
+					<div class="edit float-r">
+						<i class="fa fa-edit"></i>
+					</div>
+				</div>
+				<a href="/dt/{{ object.pk }}">
+					<div class="card-img w-100">
+						<img class="w-100" src="{{ object.post_img.url }}">
+					</div>
+					
+					<div class="date align-c"> {{ object.updated }}</div>
+					<p class="card-txt">
+						{{ object.post_txt }}
+						  	
+					</p>
+				</a>
+				<div class="tools d-flex justify-sa">
+					<a href="#">
+						<i class="fa fa-heart"> 207</i>
+						
+					</a>
+					<a href="#">
+						<i class="fa fa-comment-alt"></i>
+						
+					</a>
+					<a href="#">
+						<i class="fa fa-share"></i>
+						
+					</a>
+					
+				</div>	
+			</div>
+		{% endfor %}
+	</comment -->

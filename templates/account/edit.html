@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Edit your account{% endblock %}
+<!-- >
+{% block left_side_content %}
+	{% include "account/left_side.html" %}
+{% endblock %}
+< -- > 
+{% block content %}
+	<div class="col-5">
+		<div class="d-flex-w">
+			<div class="col-12">
+				
+				<div class=" card ">
+					<div class="form wrap">
+						<div class="d-flex">
+							<h1 class="form-h">Edit your account</h1>
+							<div class="col-3"> 
+								<div class=" card large">
+									
+									{% if request.user.profile.photo %} 
+										<a class="links mt-1" href="{% url 'dashboard' %}">
+											{% load thumbnail %}
+
+											<img src="{% thumbnail request.user.profile.photo 1000x1000 crop %}" class="w-100" alt=""/>
+											
+										</a>
+
+									{% else %}
+										{% if request.user.profile.sex == 'F' %}
+											<a class="links mt-3" href="{% url 'dashboard' %}">
+												<img src="{% static 'images/no-img-f.jpg' %}" class="w-100" alt=""/>
+											</a>
+										{% else %}
+											<a class="links mt-3" href="{% url 'dashboard' %}">
+												<img src="{% static 'images/no-img-m.jpg' %}" class="w-100" alt=""/>
+											</a>
+										{% endif %}
+									{% endif %}
+									
+									
+								</div>
+								
+							</div>
+						</div>
+						<p>You can edit your account using the following form:</p>
+						<form method="post" enctype="multipart/form-data" class="form-b" >
+							{% for i in user_form %}
+								<div class="d-flex justify-sb input-e">
+									{{ i.label }}
+									{{ i }}
+								</div>
+							{% endfor %}
+							
+							{% for j in profile_form %}
+								<div class="d-flex justify-sb input-e " style="overflow: hidden;">
+									{{ j.label }}
+									{{ j }}
+								</div>
+							{% endfor %}
+							{% csrf_token %}
+							<!--p><input class="btn-l-b bg-brand pointer" type="submit" value="Save changes"></p-->
+							<button class="btn-b pointer" type="submit"> Save </button>
+						</form>
+					</div>
+					
+				</div>
+				
+			</div>
+			
+		</div>
+ 	</div>
+{% endblock %}

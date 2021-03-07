@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Reset your password{% endblock %}
+
+
+
+{% block form_content %}
+	<div class="card col-6">
+		<div class="form">
+			<h1>Reset your password</h1>
+			{% if validlink %}
+				<p>Please enter your new password twice:</p>
+				<form method="post" class="form-b">
+					{{ form.as_p }}
+					{% for i in form %}
+						<div class="input">
+							<label class="c-b">{{ i.label }}</label><br>
+							{{ i }}
+						</div>
+					{% endfor %}
+					{% csrf_token %}
+					<p><input class="btn-o" type="submit" value="Change my password" /></p>
+				</form>
+			{% else %}
+				<p>The password reset link was invalid, possibly because it has
+				already been used. Please request a new password reset.</p>
+			{% endif %}
+		</div>
+		
+	</div>
+ 
+{% endblock %}

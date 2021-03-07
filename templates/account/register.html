@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Create an account{% endblock %}
+{% block form_content %}
+	<div class="card col-6">
+		<div class="form ">
+			<h1 class="form-h">Create an account</h1>
+			<p class="c-br">Please, sign up using the following form:</p>
+			<form method="POST" class="form-b">
+				
+				{% for i in user_form %}
+					<div class="input">
+						{{ i.label }}<br>
+						{{ i }}
+					</div>
+				{% endfor %}
+				{% csrf_token %}
+				<!--p><input class="btn-b bg-brand pointer" type="submit" value="Create account"></p-->
+				<button class="btn-l-b pointer" type="submit">Create account</button>
+			</form>
+			
+			<p class="c-g">already have an account sign in here
+		 	<a href="{% url 'login' %}"><i class="fa fa-sign-out-alt c-o"></i></a></p>
+		</div>
+		
+	</div>
+	
+{% endblock %}

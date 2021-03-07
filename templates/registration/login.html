@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Log-in{% endblock %}
+{% block form_content %}
+	<div class="d-flex">
+		
+		<div class="card col-6">
+			<div class="form">
+				<h1 class="form-h">Log-in</h1>
+				{% if form.errors %}
+					<p class="c-r">
+						Your username and password didn't match.
+						Please try again.
+					</p>
+				{% else %}
+					<p class="c-b">Please, use the following form to log-in. If you don't have an account 
+					<a href="{% url 'register' %}">register here</a></p>
+				{% endif %}
+				<div class="login-form">
+					<form action="{% url 'login' %}" method="post" class="form-b">
+						{% for i in form %}
+							<div class="input">
+								<label class="c-b">{{ i.label }}</label><br>
+								{{ i }}
+							</div>
+							{% if form.errors %}
+								{{ i.help_text }}
+							{% endif %}
+						{% endfor %}
+						{% csrf_token %}
+						<input type="hidden" name="next" value="{{ next }}" />
+						<!--p><input class="btn-b" type="submit" value="Log-in"></p-->
+						<button class="btn-b" type="submit"> Login </button>
+					</form>
+				<p><a href="{% url 'password_reset' %}">Forgotten your password?</a></p>
+				</div>
+			</div>
+		</div>
+		<div class="card col-6 bg-b" id="bg">
+		
+		</div>
+	</div>
+{% endblock %}
+	

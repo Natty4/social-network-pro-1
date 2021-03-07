@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Delet{% endblock %}
+{% block content %}
+
+	<div class="main card"> 
+		{% load thumbnail %}
+		<div class="card-img w-100">
+			<img class="w-100" src="{% thumbnail post.post_img 1000x1000 %}">
+		</div>
+		<div class="date align-c">{{ post.updated }} </div>
+		<p class="card-txt">
+			{{ post.post_txt|truncatewords:10 }}
+		
+				
+		</p>
+	    <form method="POST" class="align-c"> 
+	   
+	        {% csrf_token %} 
+	        Are you want to delete this item ? 
+	        <button type="submit" class="btn-r"> Yes </button> 
+	        <button  class="btn-b"><a href="/">Cancel </a> </button>
+	    </form> 
+	</div> 
+{% endblock %}

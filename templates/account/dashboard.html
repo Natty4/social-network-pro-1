@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+<!-- >
+{% block left_side_content %}
+	{% include "account/left_side.html" %}
+{% endblock %}
+< -- >
+{% block content %}
+<div>
+	
+
+	<div class="d-flex-w justify-sa">
+		<div class="col-4 ">
+			<div class="card">
+				<div class="w-100 ">
+					<div class="profile">
+						{% if request.user.is_authenticated %}
+							{% if request.user.profile.photo %} 
+								<a class="links mt-1" href="{% url 'dashboard' %}">
+									{% load thumbnail %}
+
+									<img src="{% thumbnail request.user.profile.photo 1000x1000 crop %}" class="w-100" alt=""/>
+									
+								</a>
+
+							{% else %}
+								{% if request.user.profile.sex == 'F' %}
+									<a class="links mt-3" href="{% url 'dashboard' %}">
+										<img src="{% static 'images/no-img-f.jpg' %}" class="w-100" alt=""/>
+									</a>
+								{% else %}
+									<a class="links mt-3" href="{% url 'dashboard' %}">
+										<img src="{% static 'images/no-img-m.jpg' %}" class="w-100" alt=""/>
+									</a>
+								{% endif %}
+							{% endif %}
+								
+							<div class="profile-detail p-1">
+								{% if request.user.first_name %}
+									<span class="c-default">Name: </span> {{request.user.first_name }} {{request.user.last_name }} <br><br>
+
+								{% else %}
+									<a href="{% url 'edit' %}" class="c-default">Add FullName </a><br><br><br>
+								{% endif %}
+								<span class="c-default">Email: </span>{{ request.user.email }}<br><br>
+								{% if request.user.profile.date_of_birth %}
+									<span class="c-default">Born-Day: </span>{{request.user.profile.date_of_birth}} <br><br>
+								
+								{% else %}
+									<a href="{% url 'edit' %}" class="c-default">Add Born-Day </a><br><br>	<br>
+								{% endif %}
+								<span class="c-default">Sex: </span>{{ request.user.profile.sex }}<br>
+
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="col-7">
+			<div class="card p-1">
+				<div class="wrap p-1">
+					<h1 class="header">Dashboard</h1>
+					<p>Welcome to your dashboard. You can
+						<a href="{% url 'edit' %}">edit your profile</a> or 
+						<a href="{% url 'password_change' %}">change your password</a>.
+					</p>
+					<a class="links" name="logout" href="{% url 'logout' %}">
+						logout
+					</a>
+				</div>
+				
+			
+			</div>
+		</div>
+		
+	</div>
+	<div class="my-posts">
+		<p class="card-head">Your Posts</p>
+		<div class="img-row d-flex-w">
+			{% for post in posts %}
+				<div class="img-column card">
+					<div class="edit float-r">
+						<a href="{% url 'post_delete' post.id %}"><i class="fa fa-delete">...</i></a>
+					</div>
+					<a href="{{ post.get_absolute_url }}">
+						
+						<img src="{% thumbnail post.post_img 1000x1000 %}" class="w-100" alt=""/>
+							
+					</a>
+				</div>
+				
+			{% endfor %}
+			
+
+			
+		</div>
+	</div>
+		
+</div>	
+
+	
+{% endblock %}
