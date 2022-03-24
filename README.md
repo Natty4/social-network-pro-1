@@ -1,6 +1,6 @@
 # pro-1 (Social Network)
 my very first django project social network
-backend : Django
-frontend : vanila html,css,js
+- backend : Django
+- frontend : html, css, js (Vanilla)
 
-## the next Zuckerberg w'll not create the social network !
+### :biking_man: the next Zuckerberg Won't create the social network ! :man_technologist: 
